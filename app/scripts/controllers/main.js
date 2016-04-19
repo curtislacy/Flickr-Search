@@ -21,6 +21,12 @@ angular.module('flickrSearchApp')
     return new X2JS();
   })
 
+  .service( 'ImageListService', function() {
+    return {
+      available_images: []
+    };
+  })
+
   .controller('MainCtrl', function () {
     this.awesomeThings = [
       'HTML5 Boilerplate',
@@ -31,8 +37,10 @@ angular.module('flickrSearchApp')
 
   // CML: If this got any larger, we'd put each controller in its own file, but we'll
   // leave it all together for now.
-  .controller('SearchFormCtrl', function( $scope, $http, SettingsService, x2js ) {
+  .controller('SearchFormCtrl', function( $scope, $http, SettingsService, x2js, ImageListService ) {
     $scope.doSearch = function() {
+      // Clear out the list of old results while we load new ones.
+      ImageListService.available_images = [];
       // Comma separate the list of words, since that's what the Flickr API expects.
       var commaSeparated = $scope.keyword ? $scope.keyword.trim().split( ' ' ).join( ',' ) : '';
       $http({
@@ -52,7 +60,9 @@ angular.module('flickrSearchApp')
             // We're ignoring all the paging of results, etc.  For now we take the
             // 100 that end up in the result array and use them as a list.
             var photoList = jsonResponse.rsp.photos.photo;
-            console.log( '* Photos: ' );
+            // Since this data came from a 3rd party (flickr), we really SHOULDN'T trust it
+            // blindly.  It should be sanitized, but I'm not bothering here.
+            ImageListService.available_images = photoList;
             console.log( photoList );
           } else {
             // TODO: Post an error message - some sanitization of response.statusText.
@@ -63,4 +73,9 @@ angular.module('flickrSearchApp')
           // TODO: Post an error message - some sanitization of response.statusText?
         });
     };
+  })
+
+  .controller('ResultsViewerCtrl', function( $scope, ImageListService ) {
+    $scope.imageListService = ImageListService;
+
   });
