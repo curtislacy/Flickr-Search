@@ -17,7 +17,17 @@
         </ul>
       </div>
       <div class="col-md-9">
-        <img ng-src="https://farm{{displayed_image._farm}}.staticflickr.com/{{displayed_image._server}}/{{displayed_image._id}}_{{displayed_image._secret}}.jpg">
+        <h2>{{metadata.title}}</h2>
+        <p>
+          <img ng-src="https://farm{{displayed_image._farm}}.staticflickr.com/{{displayed_image._server}}/{{displayed_image._id}}_{{displayed_image._secret}}.jpg">
+        </p>
+        <div ng-if="metadata">
+          <p ng-if="metadata.description">
+            {{metadata.description}}
+          </p>
+          <p>
+            Photo Credit: {{metadata.owner._realname !== "" ? metadata.owner._realname : metadata.owner._username}}
+          </p>
       </div>
     </div>
   </div>

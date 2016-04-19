@@ -74,9 +74,38 @@ angular.module('flickrSearchApp')
     };
   })
 
-  .controller('ResultsViewerCtrl', function( $scope, ImageListService ) {
+  .controller('ResultsViewerCtrl', function( $scope, $http, ImageListService, SettingsService, x2js ) {
     $scope.imageListService = ImageListService;
     $scope.showImage = function( imageData ) {
       $scope.displayed_image=imageData;
+
+      $scope.metadata = null;
+      $http({
+        method: 'GET',
+        url: SettingsService.endpoint,
+        params: {
+          method: 'flickr.photos.getInfo',
+          api_key: SettingsService.api_key,
+          photo_id: $scope.displayed_image._id
+        }
+      })
+      .then(
+        function( response ) {
+          // On success
+          if( response.status === 200 ) {
+            var jsonResponse = x2js.xml_str2json( response.data );
+            // Usual caviat applies here about how we SHOULD be sanitizing this, but that code
+            // is tedious and repetitive.
+            $scope.metadata = jsonResponse.rsp.photo;
+            console.log( jsonResponse );
+          } else {
+            // TODO: Post an error message - some sanitization of response.statusText.
+
+          }
+        }, 
+        function( response ) {
+          // TODO: Post an error message - some sanitization of response.statusText?
+        });
+
     };
   });
