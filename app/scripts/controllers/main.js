@@ -17,6 +17,10 @@ angular.module('flickrSearchApp')
     };
   })
 
+  .service('x2js', function() {
+    return new X2JS();
+  })
+
   .controller('MainCtrl', function () {
     this.awesomeThings = [
       'HTML5 Boilerplate',
@@ -27,7 +31,7 @@ angular.module('flickrSearchApp')
 
   // CML: If this got any larger, we'd put each controller in its own file, but we'll
   // leave it all together for now.
-  .controller('SearchFormCtrl', function( $scope, $http, SettingsService ) {
+  .controller('SearchFormCtrl', function( $scope, $http, SettingsService, x2js ) {
     $scope.doSearch = function() {
       // Comma separate the list of words, since that's what the Flickr API expects.
       var commaSeparated = $scope.keyword ? $scope.keyword.trim().split( ' ' ).join( ',' ) : '';
@@ -43,16 +47,20 @@ angular.module('flickrSearchApp')
       .then( 
         function( response ) {
           // On success
-          if( response.status == 200 ) {
-
+          if( response.status === 200 ) {
+            var jsonResponse = x2js.xml_str2json( response.data );
+            // We're ignoring all the paging of results, etc.  For now we take the
+            // 100 that end up in the result array and use them as a list.
+            var photoList = jsonResponse.rsp.photos.photo;
+            console.log( '* Photos: ' );
+            console.log( photoList );
           } else {
             // TODO: Post an error message - some sanitization of response.statusText.
+
           }
-          console.log( 'Success:' );
-          console.log( response );
         }, 
         function( response ) {
-          // TODO: Post an error message - some sanitization of response.statusText.
+          // TODO: Post an error message - some sanitization of response.statusText?
         });
     };
   });
