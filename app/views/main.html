@@ -9,10 +9,8 @@
     <div class="row">
       <div class="col-md-3">
         <ul class="list-group">
-          <li class="list-group-item" style="cursor: pointer;" ng-repeat="item in imageListService.available_images track by $index">
-            <a ng-click="showImage(item)">
-              {{item._title}}
-            </a>
+          <button type="button" class="list-group-item" style="cursor: pointer;" ng-repeat="item in imageListService.available_images track by $index" ng-click="showImage(item)">
+            {{item._title}}
           </li>
         </ul>
       </div>
