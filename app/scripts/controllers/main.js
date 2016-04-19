@@ -41,6 +41,7 @@ angular.module('flickrSearchApp')
     $scope.doSearch = function() {
       // Clear out the list of old results while we load new ones.
       ImageListService.available_images = [];
+      ImageListService.displayed_image = null;
       // Comma separate the list of words, since that's what the Flickr API expects.
       var commaSeparated = $scope.keyword ? $scope.keyword.trim().split( ' ' ).join( ',' ) : '';
       $http({
@@ -77,7 +78,7 @@ angular.module('flickrSearchApp')
   .controller('ResultsViewerCtrl', function( $scope, $http, ImageListService, SettingsService, x2js ) {
     $scope.imageListService = ImageListService;
     $scope.showImage = function( imageData ) {
-      $scope.displayed_image=imageData;
+      $scope.imageListService.displayed_image=imageData;
 
       $scope.metadata = null;
       $http({
@@ -86,7 +87,7 @@ angular.module('flickrSearchApp')
         params: {
           method: 'flickr.photos.getInfo',
           api_key: SettingsService.api_key,
-          photo_id: $scope.displayed_image._id
+          photo_id: $scope.imageListService.displayed_image._id
         }
       })
       .then(
