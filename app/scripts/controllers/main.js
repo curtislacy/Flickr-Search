@@ -63,7 +63,6 @@ angular.module('flickrSearchApp')
             // Since this data came from a 3rd party (flickr), we really SHOULDN'T trust it
             // blindly.  It should be sanitized, but I'm not bothering here.
             ImageListService.available_images = photoList;
-            console.log( photoList );
           } else {
             // TODO: Post an error message - some sanitization of response.statusText.
 
@@ -77,5 +76,7 @@ angular.module('flickrSearchApp')
 
   .controller('ResultsViewerCtrl', function( $scope, ImageListService ) {
     $scope.imageListService = ImageListService;
-
+    $scope.showImage = function( imageData ) {
+      $scope.displayed_image=imageData;
+    };
   });

@@ -9,8 +9,15 @@
     <div class="row">
       <div class="col-md-3">
         <ul class="list-group">
-          <li class="list-group-item" ng-repeat="item in imageListService.available_images track by $index">{{item._title}}</li>
+          <li class="list-group-item" style="cursor: pointer;" ng-repeat="item in imageListService.available_images track by $index">
+            <a ng-click="showImage(item)">
+              {{item._title}}
+            </a>
+          </li>
         </ul>
+      </div>
+      <div class="col-md-9">
+        <img ng-src="https://farm{{displayed_image._farm}}.staticflickr.com/{{displayed_image._server}}/{{displayed_image._id}}_{{displayed_image._secret}}.jpg">
       </div>
     </div>
   </div>
