@@ -1,6 +1,6 @@
 # flickr-search
 
-
+![screenshot](Sample.png)
 
 ## Build & development
 
